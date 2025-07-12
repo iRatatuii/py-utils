@@ -39,13 +39,17 @@ def find_users_by_name(query: str, filepath: str) -> list[User]:
 
 def delete_user_by_name(name: str, filepath: str) -> bool:
     users = load_users(filepath)
-    new_users = [user for user in users if user.name.lower() != name.lower()]
+    new_users = [u for u in users if u.name.lower() != name.lower()]
     
     if len(new_users) == len(users):
         return False
     
     with open(filepath, 'w', encoding='utf-8') as file:
-        json.dump([asdict(user) for user in new_users], file, indent=4, ensure_ascii=False)
+        json.dump(
+            [asdict(user) for user in new_users],
+            file,
+            indent=4,
+            ensure_ascii=False)
         return True
     
     

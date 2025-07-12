@@ -1,6 +1,12 @@
 import argparse
 
-from src.user.storage import delete_user_by_name, export_users_to_csv, find_users_by_name, load_users, save_user
+from src.user.storage import (
+    delete_user_by_name,
+    export_users_to_csv,
+    find_users_by_name,
+    load_users,
+    save_user,
+)
 from src.user.utils import collect_user_profile
 
 DATA_FILE = 'data/profiles.json'
@@ -21,12 +27,60 @@ def handle_list():
         print(f"— {user.name}, {user.age} лет, рост {user.height} см")
 
 
+def handle_filter(query: str):
+    if not query:
+        print("❗ Укажи поисковый запрос через --query")
+        return
+    results = find_users_by_name(query, DATA_FILE)
+    if not results:
+        print("🙁 Никого не найдено")
+        return
+    print(f"🔍 Найдено {len(results)}:")
+    for user in results:
+        print(f"— {user.name}, {user.age} лет")
+
+
+def handle_delete(name: str) -> None:
+    if not name:
+        print("❗ Укажи имя через --name")
+        return
+    deleted = delete_user_by_name(name, DATA_FILE)
+    if deleted:
+        print(f"🗑️ Пользователь '{name}' удалён.")
+    else:
+        print(f"🙁 Пользователь '{name}' не найден.")
+    
+
+def handle_export(out: str) -> None:
+    if not out:
+        print("❗ Укажи путь к CSV через --out")
+        return
+    export_users_to_csv(DATA_FILE, out)
+    print(f"📤 Экспорт завершён: {out}")
+
+
+def parse_args(args):
+    match args.command:
+        case "create":
+            handle_create()
+        case "list":
+            handle_list()
+        case "filter":
+            handle_filter(args.query)
+        case "delete":
+            handle_delete(args.name)
+        case "export":
+            handle_export(args.out)
+    
+    
 def main():
     parser = argparse.ArgumentParser(
         description="Управление профилями пользователей"
     )
     parser.add_argument(
-        "command", choices=["create", "list", 'filter', 'delete', 'export'], help="Команда: create или list"
+        "command", 
+        choices=["create", "list", 'filter', 'delete', 'export'],
+        help="Команда: create или list"
     )
     parser.add_argument("--query", help="Поисковый запрос (для filter)")
     parser.add_argument("--name", help="Имя пользователя (для удаления)")
@@ -34,38 +88,8 @@ def main():
     
     args = parser.parse_args()
     
-    match args.command:
-        case 'create':
-            handle_create()
-        case 'list':
-            handle_list()
-        case 'filter':
-            if not args.query:
-                print("❗ Укажи поисковый запрос через --query")
-                return
-            results = find_users_by_name(args.query, DATA_FILE)
-            if not results:
-                print("🙁 Никого не найдено")
-                return
-            print(f"🔍 Найдено {len(results)}:")
-            for user in results:
-                print(f"— {user.name}, {user.age} лет")
-        case 'delete':
-            if not args.name:
-                print("❗ Укажи имя через --name")
-                return
-            deleted = delete_user_by_name(args.name, DATA_FILE)
-            if deleted:
-                print(f"🗑️ Пользователь '{args.name}' удалён.")
-            else:
-                print(f"🙁 Пользователь '{args.name}' не найден.")
-        case 'export':
-            if not args.out:
-                print("❗ Укажи путь к CSV через --out")
-                return
-            export_users_to_csv(DATA_FILE, args.out)
-            print(f"📤 Экспорт завершён: {args.out}")
-
+    parse_args(args)
+    
 
 if __name__ == "__main__":
     main()
