@@ -1,6 +1,6 @@
 import argparse
 
-from src.user.storage import delete_user_by_name, find_users_by_name, load_users, save_user
+from src.user.storage import delete_user_by_name, export_users_to_csv, find_users_by_name, load_users, save_user
 from src.user.utils import collect_user_profile
 
 DATA_FILE = 'data/profiles.json'
@@ -26,10 +26,11 @@ def main():
         description="Управление профилями пользователей"
     )
     parser.add_argument(
-        "command", choices=["create", "list", 'filter', 'delete'], help="Команда: create или list"
+        "command", choices=["create", "list", 'filter', 'delete', 'export'], help="Команда: create или list"
     )
     parser.add_argument("--query", help="Поисковый запрос (для filter)")
     parser.add_argument("--name", help="Имя пользователя (для удаления)")
+    parser.add_argument("--out", help="Путь к CSV-файлу (для export)")
     
     args = parser.parse_args()
     
@@ -58,7 +59,13 @@ def main():
                 print(f"🗑️ Пользователь '{args.name}' удалён.")
             else:
                 print(f"🙁 Пользователь '{args.name}' не найден.")
-                
-                
+        case 'export':
+            if not args.out:
+                print("❗ Укажи путь к CSV через --out")
+                return
+            export_users_to_csv(DATA_FILE, args.out)
+            print(f"📤 Экспорт завершён: {args.out}")
+
+
 if __name__ == "__main__":
     main()

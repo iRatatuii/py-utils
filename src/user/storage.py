@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 from dataclasses import asdict
@@ -46,3 +47,23 @@ def delete_user_by_name(name: str, filepath: str) -> bool:
     with open(filepath, 'w', encoding='utf-8') as file:
         json.dump([asdict(user) for user in new_users], file, indent=4, ensure_ascii=False)
         return True
+    
+    
+def export_users_to_csv(filepath: str, csv_path: str) -> None:
+    users = load_users(filepath)
+    with open(csv_path, 'w', encoding='utf-8', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(
+            ["Имя", "Возраст", "Рост", "Вес", "Активен", "Подписка"]
+        )
+        for user in users:
+            writer.writerow(
+                [
+                    user.name,
+                    user.age,
+                    user.height,
+                    user.weight,
+                    user.is_active,
+                    user.has_subscription,
+                ]
+            )
