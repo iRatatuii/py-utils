@@ -1,5 +1,5 @@
 [project]
-name = "py-utils"
+name = "utils"
 authors = [
     {name = "Andrei Karpenkin", email = "andrei.karpenkin@gmail.com"},
 ]
