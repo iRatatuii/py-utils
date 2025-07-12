@@ -1,6 +1,6 @@
 import argparse
 
-from src.user.storage import load_users, save_user
+from src.user.storage import find_users_by_name, load_users, save_user
 from src.user.utils import collect_user_profile
 
 DATA_FILE = 'data/profiles.json'
@@ -26,8 +26,9 @@ def main():
         description="Управление профилями пользователей"
     )
     parser.add_argument(
-        "command", choices=["create", "list"], help="Команда: create или list"
+        "command", choices=["create", "list", 'filter'], help="Команда: create или list"
     )
+    parser.add_argument("--query", help="Поисковый запрос (для filter)")
     args = parser.parse_args()
     
     match args.command:
@@ -35,7 +36,18 @@ def main():
             handle_create()
         case 'list':
             handle_list()
-                
-                
+        case 'filter':
+            if not args.query:
+                print("❗ Укажи поисковый запрос через --query")
+                return
+            results = find_users_by_name(args.query, DATA_FILE)
+            if not results:
+                print("🙁 Никого не найдено")
+                return
+            print(f"🔍 Найдено {len(results)}:")
+            for user in results:
+                print(f"— {user.name}, {user.age} лет")
+
+
 if __name__ == "__main__":
     main()

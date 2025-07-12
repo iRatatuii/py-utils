@@ -29,3 +29,9 @@ def load_users(filepath: str) -> list[User]:
         except json.JSONDecodeError:
             return []
     return [User(**data) for data in raw_data]
+
+
+def find_users_by_name(query: str, filepath: str) -> list[User]:
+    users = load_users(filepath)
+    return [user for user in users if query.lower() in user.name.lower()]
+
