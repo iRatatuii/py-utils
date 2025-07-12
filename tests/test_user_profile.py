@@ -1,4 +1,4 @@
-from src.user_profile import collect_user_profile
+from src.user.utils import collect_user_profile
 
 
 def test_collect_user_profile(monkeypatch):
@@ -7,9 +7,9 @@ def test_collect_user_profile(monkeypatch):
     
     profile = collect_user_profile()
     
-    assert profile['name'] == 'Andy'
-    assert profile["age"] == 31
-    assert profile["weight"] == 83.0
-    assert profile["height"] == 176
-    assert profile["is_active"] is True
-    assert profile["has_subscription"] is False
+    assert profile.name == 'Andy'
+    assert profile.age == 31
+    assert profile.weight == 83.0
+    assert profile.height == 176
+    assert profile.is_active is True
+    assert profile.has_subscription is False
