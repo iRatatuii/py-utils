@@ -18,4 +18,14 @@ def save_user(user: User, filepath: str) -> None:
     with open(filepath, 'w') as file:
         json.dump(users, file, indent=4, ensure_ascii=False)
     
+
+def load_users(filepath: str) -> list[User]:
+    if not os.path.exists(filepath):
+        return []
     
+    with open(filepath, 'r') as file:
+        try:
+            raw_data = json.load(file)
+        except json.JSONDecodeError:
+            return []
+    return [User(**data) for data in raw_data]

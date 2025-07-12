@@ -1,6 +1,5 @@
+from user.storage import load_users, save_user
 from user.utils import collect_user_profile
-from user.storage import save_user
-
 
 if __name__ == "__main__":
     
@@ -17,4 +16,9 @@ if __name__ == "__main__":
     print(f"Рост: {profile.height}")
     print(f"Вес: {profile.weight}")
     print(f"Подписка: {subscription_text}")
-    print(f"Образ жизни: {activity_text}")  
+    print(f"Образ жизни: {activity_text}")
+    
+    users = load_users("data/profiles.json")
+    print(f"\nВ базе {len(users)} пользователей:")
+    for user in users:
+        print(f"— {user.name}, {user.age} лет")

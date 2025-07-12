@@ -1,17 +1,25 @@
 [
     {
-        "name": "Andy",
-        "age": 31,
-        "weight": 83.0,
-        "height": 176,
-        "is_active": true,
-        "has_subscription": true
+        "name": "Vasya",
+        "age": 38,
+        "weight": 88.0,
+        "height": 165,
+        "is_active": false,
+        "has_subscription": false
     },
     {
         "name": "Andrei",
         "age": 31,
         "weight": 84.0,
         "height": 176,
+        "is_active": true,
+        "has_subscription": true
+    },
+    {
+        "name": "Vika",
+        "age": 25,
+        "weight": 47.0,
+        "height": 160,
         "is_active": true,
         "has_subscription": true
     }
