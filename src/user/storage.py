@@ -8,16 +8,20 @@ from src.user.models import User
 
 def save_user(user: User, filepath: str) -> None:
     users = []
+    
     if os.path.exists(filepath):
-        with open(filepath, 'r') as file:
+        with open(filepath, 'r', encoding='utf-8') as file:
             try:
-                users = json.load(file)
+                data = json.load(file)
+                users = [User(**u) for u in data]
             except json.JSONDecodeError:
                 users = []
-        users.append(asdict(user))
+    users.append(user)
                     
     with open(filepath, 'w') as file:
-        json.dump(users, file, indent=4, ensure_ascii=False)
+        json.dump(
+            [asdict(user) for user in users], file, indent=4, ensure_ascii=False
+        )
     
 
 def load_users(filepath: str) -> list[User]:
